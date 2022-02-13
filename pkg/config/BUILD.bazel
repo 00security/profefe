@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "config",
+    srcs = ["config.go"],
+    importpath = "github.com/00security/profefe/pkg/config",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/agentutil",
+        "//pkg/log",
+        "//pkg/storage/badger",
+        "//pkg/storage/clickhouse",
+        "//pkg/storage/gcs",
+        "//pkg/storage/s3",
+    ],
+)

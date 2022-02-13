@@ -8,12 +8,12 @@ import (
 )
 
 type Config struct {
-	Level  zapcore.Level
+	Level  string
 	Format string
 }
 
 func (conf *Config) RegisterFlags(f *flag.FlagSet) {
-	f.Var(&conf.Level, "log.level", "log level")
+	f.StringVar(&conf.Level, "log.level", "error", "log level")
 	f.StringVar(&conf.Format, "log.format", "console", "(TODO) log formatter")
 }
 
@@ -30,8 +30,12 @@ func (conf *Config) Build() (*Logger, error) {
 		EncodeDuration: zapcore.StringDurationEncoder,
 		EncodeCaller:   zapcore.ShortCallerEncoder,
 	}
+	configLevel, err := zap.ParseAtomicLevel(conf.Level)
+	if err != nil {
+		return nil, err
+	}
 	zapConf := zap.Config{
-		Level:             zap.NewAtomicLevelAt(conf.Level),
+		Level:             configLevel,
 		Development:       true,
 		DisableStacktrace: true,
 		Encoding:          conf.Format,

@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "agent",
+    srcs = [
+        "agent.go",
+        "options.go",
+        "retry.go",
+    ],
+    importpath = "github.com/00security/profefe/agent",
+    visibility = ["//visibility:public"],
+    deps = ["//pkg/profile"],
+)
+
+go_test(
+    name = "agent_test",
+    srcs = ["retry_test.go"],
+    embed = [":agent"],
+)

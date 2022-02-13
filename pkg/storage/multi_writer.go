@@ -6,7 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 
-	"github.com/profefe/profefe/pkg/profile"
+	"github.com/00security/profefe/pkg/profile"
 )
 
 type MultiWriter struct {

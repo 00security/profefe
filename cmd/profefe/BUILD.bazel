@@ -1,0 +1,42 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+load("@io_bazel_rules_docker//container:container.bzl", "container_image")
+
+container_image(
+    name = "image-arm64",
+    base = "//:golang",
+    entrypoint = ["/profefe"],
+    files = [":profefe"],
+)
+
+container_push(
+   name = "push",
+   image = ":image",
+   format = "Docker",
+   registry = "gcr.io",
+   repository = "my-project/my-image",
+   tag = "dev",
+)
+
+go_library(
+    name = "profefe_lib",
+    srcs = ["main.go"],
+    importpath = "github.com/00security/profefe/cmd/profefe",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//pkg/config",
+        "//pkg/log",
+        "//pkg/middleware",
+        "//pkg/profefe",
+        "//pkg/storage",
+        "//version",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@com_github_prometheus_client_golang//prometheus/promhttp",
+        "@org_uber_go_zap//:zap",
+    ],
+)
+
+go_binary(
+    name = "profefe",
+    embed = [":profefe_lib"],
+    visibility = ["//visibility:public"],
+)

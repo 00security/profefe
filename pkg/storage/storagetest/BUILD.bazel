@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "storagetest",
+    srcs = [
+        "storagetest.go",
+        "suite.go",
+    ],
+    importpath = "github.com/00security/profefe/pkg/storage/storagetest",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//internal/pprof/profile",
+        "//pkg/pprofutil",
+        "//pkg/profile",
+        "//pkg/storage",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
+        "@com_github_stretchr_testify//suite",
+    ],
+)

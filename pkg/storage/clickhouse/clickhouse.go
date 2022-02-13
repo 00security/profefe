@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/00security/profefe/pkg/log"
 	_ "github.com/ClickHouse/clickhouse-go"
-	"github.com/profefe/profefe/pkg/log"
 )
 
 type Config struct {

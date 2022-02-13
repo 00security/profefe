@@ -3,8 +3,8 @@ package profefe
 import (
 	"net/http"
 
-	"github.com/profefe/profefe/pkg/log"
-	"github.com/profefe/profefe/pkg/storage"
+	"github.com/00security/profefe/pkg/log"
+	"github.com/00security/profefe/pkg/storage"
 )
 
 type ServicesHandler struct {

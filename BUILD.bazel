@@ -1,0 +1,73 @@
+load("@bazel_gazelle//:def.bzl", "gazelle")
+load("@bazel_skylib//lib:selects.bzl", "selects")
+load("@io_bazel_rules_docker//container:container.bzl", "container_image")
+
+# gazelle:prefix github.com/00security/profefe
+# gazelle:proto default
+# gazelle:exclude examples
+
+gazelle(name = "gazelle")
+
+config_setting(
+    name = "config_arm64",
+    values = {"cpu": "darwin_arm64"},
+)
+
+config_setting(
+    name = "config_x86-64",
+    values = {"cpu": "k8"},
+)
+
+config_setting(
+    name = "config_dbg",
+    values = {"compilation_mode": "dbg"},
+)
+
+selects.config_setting_group(
+    name = "x86_64_debug_build",
+    match_all = [
+        ":config_x86-64",
+        ":config_dbg",
+    ],
+    visibility = ["//:__subpackages__"],
+)
+
+selects.config_setting_group(
+    name = "m1_debug_build",
+    match_all = [
+        ":config_arm64",
+        ":config_dbg",
+    ],
+    visibility = ["//:__subpackages__"],
+)
+
+selects.config_setting_group(
+    name = "x86_64_build",
+    match_all = [
+        ":config_x86-64",
+    ],
+    visibility = ["//:__subpackages__"],
+)
+
+selects.config_setting_group(
+    name = "m1_build",
+    match_all = [
+        ":config_arm64",
+    ],
+    visibility = ["//:__subpackages__"],
+)
+
+container_image(
+    name = "golang",
+    base = select({
+        ":m1_build": "@golang_distroless_arm64//image",
+        ":x86_64_build": "@golang_distroless_amd64//image",
+        "//conditions:default": "@platforms//:incompatible",
+    }),
+    target_compatible_with = select({
+        ":m1_build": [],
+        ":x86_64_build": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
+    visibility = ["//:__subpackages__"],
+)

@@ -4,7 +4,7 @@ import (
 	"context"
 	"io"
 
-	"github.com/profefe/profefe/pkg/profile"
+	"github.com/00security/profefe/pkg/profile"
 )
 
 type WriteProfileFunc func(ctx context.Context, params *WriteProfileParams, r io.Reader) (profile.Meta, error)

@@ -8,10 +8,10 @@ import (
 	"path"
 	"strings"
 
-	"github.com/profefe/profefe/pkg/log"
-	"github.com/profefe/profefe/pkg/pprofutil"
-	"github.com/profefe/profefe/pkg/profile"
-	"github.com/profefe/profefe/pkg/storage"
+	"github.com/00security/profefe/pkg/log"
+	"github.com/00security/profefe/pkg/pprofutil"
+	"github.com/00security/profefe/pkg/profile"
+	"github.com/00security/profefe/pkg/storage"
 )
 
 type ProfilesHandler struct {

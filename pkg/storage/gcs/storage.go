@@ -14,9 +14,9 @@ import (
 	"google.golang.org/api/iterator"
 
 	gcs "cloud.google.com/go/storage"
-	"github.com/profefe/profefe/pkg/log"
-	"github.com/profefe/profefe/pkg/profile"
-	"github.com/profefe/profefe/pkg/storage"
+	"github.com/00security/profefe/pkg/log"
+	"github.com/00security/profefe/pkg/profile"
+	"github.com/00security/profefe/pkg/storage"
 )
 
 // gcs objects' key prefix indicates the key's naming schema

@@ -6,7 +6,7 @@ import (
 	"fmt"
 
 	"cloud.google.com/go/storage"
-	"github.com/profefe/profefe/pkg/log"
+	"github.com/00security/profefe/pkg/log"
 )
 
 const (
@@ -14,8 +14,8 @@ const (
 )
 
 type Config struct {
-	Bucket      string
-	MaxRetries  int
+	Bucket     string
+	MaxRetries int
 }
 
 func (conf *Config) RegisterFlags(f *flag.FlagSet) {

@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"sync"
 
+	pprofProfile "github.com/00security/profefe/internal/pprof/profile"
 	"github.com/cespare/xxhash/v2"
-	pprofProfile "github.com/profefe/profefe/internal/pprof/profile"
 )
 
 func isEmptySample(s *pprofProfile.Sample) bool {

@@ -7,11 +7,11 @@ import (
 	"io"
 	"time"
 
-	pprofProfile "github.com/profefe/profefe/internal/pprof/profile"
-	"github.com/profefe/profefe/pkg/log"
-	"github.com/profefe/profefe/pkg/pprofutil"
-	"github.com/profefe/profefe/pkg/profile"
-	"github.com/profefe/profefe/pkg/storage"
+	pprofProfile "github.com/00security/profefe/internal/pprof/profile"
+	"github.com/00security/profefe/pkg/log"
+	"github.com/00security/profefe/pkg/pprofutil"
+	"github.com/00security/profefe/pkg/profile"
+	"github.com/00security/profefe/pkg/storage"
 )
 
 type Storage struct {

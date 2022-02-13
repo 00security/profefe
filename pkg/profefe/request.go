@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/profefe/profefe/pkg/profile"
-	"github.com/profefe/profefe/pkg/storage"
+	"github.com/00security/profefe/pkg/profile"
+	"github.com/00security/profefe/pkg/storage"
 )
 
 const timeFormat = "2006-01-02T15:04:05"

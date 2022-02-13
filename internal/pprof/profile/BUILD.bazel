@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "profile",
+    srcs = [
+        "encode.go",
+        "filter.go",
+        "index.go",
+        "legacy_java_profile.go",
+        "legacy_profile.go",
+        "merge.go",
+        "profile.go",
+        "proto.go",
+        "prune.go",
+    ],
+    importpath = "github.com/00security/profefe/internal/pprof/profile",
+    visibility = ["//:__subpackages__"],
+)

@@ -7,7 +7,7 @@ import (
 	"io"
 	"time"
 
-	"github.com/profefe/profefe/pkg/profile"
+	"github.com/00security/profefe/pkg/profile"
 )
 
 var (

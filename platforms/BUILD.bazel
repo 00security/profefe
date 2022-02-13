@@ -1,0 +1,49 @@
+constraint_setting(name = "compilation_mode")
+
+constraint_value(
+    name = "dbg",
+    constraint_setting = ":compilation_mode",
+    visibility = ["//visibility:public"],
+)
+
+platform(
+    name = "m1_debug",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:arm64",
+        ":dbg",
+    ],
+    parents = ["@io_bazel_rules_go//go/toolchain:linux_arm64"],
+    visibility = ["//visibility:public"],
+)
+
+platform(
+    name = "m1_release",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:arm64",
+    ],
+    parents = ["@io_bazel_rules_go//go/toolchain:linux_arm64"],
+    visibility = ["//visibility:public"],
+)
+
+platform(
+    name = "x64_debug",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+        ":dbg",
+    ],
+    parents = ["@io_bazel_rules_go//go/toolchain:linux_amd64"],
+    visibility = ["//visibility:public"],
+)
+
+platform(
+    name = "x64_release",
+    constraint_values = [
+        "@platforms//os:linux",
+        "@platforms//cpu:x86_64",
+    ],
+    parents = ["@io_bazel_rules_go//go/toolchain:linux_amd64"],
+    visibility = ["//visibility:public"],
+)

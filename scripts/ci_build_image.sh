@@ -6,7 +6,7 @@ set -eu
 : ${DOCKER=docker}
 : ${BUILDCTL=buildctl}
 
-: ${PLATFORMS=linux/amd64}
+: ${PLATFORMS=linux/arm64}
 
 PUSH_IMAGE=
 if [ "$1" == "--push" ]; then

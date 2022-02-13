@@ -1,0 +1,49 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "profefe",
+    srcs = [
+        "collector.go",
+        "metrics.go",
+        "models.go",
+        "profiles_handler.go",
+        "querier.go",
+        "reply.go",
+        "request.go",
+        "routes.go",
+        "services_handler.go",
+        "version_handler.go",
+    ],
+    importpath = "github.com/00security/profefe/pkg/profefe",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//internal/pprof/profile",
+        "//pkg/log",
+        "//pkg/pprofutil",
+        "//pkg/profile",
+        "//pkg/storage",
+        "//version",
+        "@com_github_prometheus_client_golang//prometheus",
+        "@org_uber_go_zap//:zap",
+    ],
+)
+
+go_test(
+    name = "profefe_test",
+    srcs = [
+        "collector_test.go",
+        "querier_test.go",
+        "reply_test.go",
+        "services_handler_test.go",
+    ],
+    embed = [":profefe"],
+    deps = [
+        "//pkg/log",
+        "//pkg/pprofutil",
+        "//pkg/profile",
+        "//pkg/storage",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
+        "@org_uber_go_zap//zaptest",
+    ],
+)

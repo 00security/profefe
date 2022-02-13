@@ -8,10 +8,10 @@ import (
 	"sync"
 	"time"
 
+	pprofProfile "github.com/00security/profefe/internal/pprof/profile"
+	"github.com/00security/profefe/pkg/log"
+	"github.com/00security/profefe/pkg/storage"
 	"github.com/ClickHouse/clickhouse-go"
-	pprofProfile "github.com/profefe/profefe/internal/pprof/profile"
-	"github.com/profefe/profefe/pkg/log"
-	"github.com/profefe/profefe/pkg/storage"
 	"go.uber.org/zap"
 )
 

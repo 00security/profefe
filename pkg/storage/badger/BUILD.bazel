@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "badger",
+    srcs = [
+        "badger.go",
+        "cache.go",
+        "storage.go",
+    ],
+    importpath = "github.com/00security/profefe/pkg/storage/badger",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/log",
+        "//pkg/profile",
+        "//pkg/storage",
+        "@com_github_cespare_xxhash_v2//:xxhash",
+        "@com_github_dgraph_io_badger//:badger",
+        "@com_github_rs_xid//:xid",
+        "@org_uber_go_zap//:zap",
+    ],
+)
+
+go_test(
+    name = "badger_test",
+    srcs = ["storage_integration_test.go"],
+    deps = [
+        "//pkg/log",
+        "//pkg/storage/badger",
+        "//pkg/storage/storagetest",
+        "@com_github_dgraph_io_badger//:badger",
+        "@com_github_stretchr_testify//require",
+        "@com_github_stretchr_testify//suite",
+        "@org_uber_go_zap//zapcore",
+        "@org_uber_go_zap//zaptest",
+    ],
+)

@@ -11,11 +11,11 @@ import (
 	"io/ioutil"
 	"time"
 
+	"github.com/00security/profefe/pkg/log"
+	"github.com/00security/profefe/pkg/profile"
+	"github.com/00security/profefe/pkg/storage"
 	"github.com/cespare/xxhash/v2"
 	"github.com/dgraph-io/badger"
-	"github.com/profefe/profefe/pkg/log"
-	"github.com/profefe/profefe/pkg/profile"
-	"github.com/profefe/profefe/pkg/storage"
 	"github.com/rs/xid"
 )
 

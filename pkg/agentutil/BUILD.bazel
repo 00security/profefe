@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "agentutil",
+    srcs = ["confg.go"],
+    importpath = "github.com/00security/profefe/pkg/agentutil",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//agent",
+        "//pkg/log",
+        "//pkg/profile",
+        "//version",
+    ],
+)

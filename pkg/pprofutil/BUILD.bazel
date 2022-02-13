@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "pprofutil",
+    srcs = [
+        "profile_builder.go",
+        "profile_parser.go",
+        "util.go",
+    ],
+    importpath = "github.com/00security/profefe/pkg/pprofutil",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//internal/pprof/profile",
+        "//pkg/profile",
+    ],
+)
+
+go_test(
+    name = "pprofutil_test",
+    srcs = [
+        "profile_builder_test.go",
+        "profile_parser_test.go",
+        "util_test.go",
+    ],
+    embed = [":pprofutil"],
+    deps = [
+        "//internal/pprof/profile",
+        "//pkg/profile",
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
+    ],
+)

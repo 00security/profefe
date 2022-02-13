@@ -3,7 +3,7 @@ package pprofutil
 import (
 	"testing"
 
-	pprofProfile "github.com/profefe/profefe/internal/pprof/profile"
+	pprofProfile "github.com/00security/profefe/internal/pprof/profile"
 	"github.com/stretchr/testify/assert"
 )
 

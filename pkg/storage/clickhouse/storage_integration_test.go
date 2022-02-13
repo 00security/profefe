@@ -5,10 +5,10 @@ import (
 	"os"
 	"testing"
 
+	"github.com/00security/profefe/pkg/log"
+	storageCH "github.com/00security/profefe/pkg/storage/clickhouse"
+	"github.com/00security/profefe/pkg/storage/storagetest"
 	_ "github.com/ClickHouse/clickhouse-go"
-	"github.com/profefe/profefe/pkg/log"
-	storageCH "github.com/profefe/profefe/pkg/storage/clickhouse"
-	"github.com/profefe/profefe/pkg/storage/storagetest"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap/zapcore"
