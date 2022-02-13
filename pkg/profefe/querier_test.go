@@ -6,9 +6,9 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/profefe/profefe/pkg/log"
-	"github.com/profefe/profefe/pkg/profile"
-	"github.com/profefe/profefe/pkg/storage"
+	"github.com/00security/profefe/pkg/log"
+	"github.com/00security/profefe/pkg/profile"
+	"github.com/00security/profefe/pkg/storage"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap/zaptest"
 )

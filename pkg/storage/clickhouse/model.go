@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/profefe/profefe/pkg/profile"
+	"github.com/00security/profefe/pkg/profile"
 	"github.com/rs/xid"
 )
 

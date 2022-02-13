@@ -1,0 +1,2 @@
+build --stamp
+build --workspace_status_command=./scripts/git/status.sh

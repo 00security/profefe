@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/profefe/profefe/agent"
-	"github.com/profefe/profefe/pkg/log"
-	"github.com/profefe/profefe/pkg/profile"
-	"github.com/profefe/profefe/version"
+	"github.com/00security/profefe/agent"
+	"github.com/00security/profefe/pkg/log"
+	"github.com/00security/profefe/pkg/profile"
+	"github.com/00security/profefe/version"
 )
 
 const (

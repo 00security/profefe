@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "storage",
+    srcs = [
+        "multi_writer.go",
+        "storage.go",
+        "stub.go",
+    ],
+    importpath = "github.com/00security/profefe/pkg/storage",
+    visibility = ["//visibility:public"],
+    deps = ["//pkg/profile"],
+)
+
+go_test(
+    name = "storage_test",
+    srcs = ["multi_writer_test.go"],
+    embed = [":storage"],
+    deps = [
+        "//pkg/profile",
+        "@com_github_stretchr_testify//require",
+    ],
+)

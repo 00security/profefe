@@ -1,7 +1,7 @@
 # profefe
 
 [![Build Status](https://travis-ci.com/profefe/profefe.svg?branch=master)](https://travis-ci.com/profefe/profefe)
-[![Go Report Card](https://goreportcard.com/badge/github.com/profefe/profefe)](https://goreportcard.com/report/github.com/profefe/profefe)
+[![Go Report Card](https://goreportcard.com/badge/github.com/00security/profefe)](https://goreportcard.com/report/github.com/00security/profefe)
 [![Docker Pulls](https://img.shields.io/docker/pulls/profefe/profefe.svg)][hub.docker]
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/profefe/profefe/master/LICENSE)
 
@@ -294,7 +294,7 @@ from Go's Diagnostics documentation).
 
 To reduce the costs, users can adjust the frequency of collection rounds, e.g. collect 10 seconds of CPU profiles every 5 minutes.
 
-[profefe-agent](https://godoc.org/github.com/profefe/profefe/agent) tries to reduce the overhead further by adding a small
+[profefe-agent](https://godoc.org/github.com/00security/profefe/agent) tries to reduce the overhead further by adding a small
 jiggling in-between the profiles collection rounds. This distributes the total profiling overhead, making sure that not all instances
 of application's cluster are being profiled at the same time.
 

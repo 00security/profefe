@@ -26,7 +26,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/profefe/profefe/agent"
+	"github.com/00security/profefe/agent"
 )
 
 var (

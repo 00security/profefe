@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/profefe/profefe/pkg/profile"
-	"github.com/profefe/profefe/pkg/storage"
+	"github.com/00security/profefe/pkg/profile"
+	"github.com/00security/profefe/pkg/storage"
 	"github.com/stretchr/testify/require"
 )
 

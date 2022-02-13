@@ -9,14 +9,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/service/s3/s3iface"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager/s3manageriface"
-	"github.com/profefe/profefe/pkg/log"
-	"github.com/profefe/profefe/pkg/profile"
-	"github.com/profefe/profefe/pkg/storage"
+	"github.com/00security/profefe/pkg/log"
+	"github.com/00security/profefe/pkg/profile"
+	"github.com/00security/profefe/pkg/storage"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/rs/xid"
 	"go.uber.org/zap"
 )
@@ -40,21 +38,21 @@ const (
 // "digests" uniquely describes the profile, it also includes profiles creation time.
 type Storage struct {
 	logger     *log.Logger
-	svc        s3iface.S3API
-	uploader   s3manageriface.UploaderAPI
-	downloader s3manageriface.DownloaderAPI
+	client     *s3.Client
+	uploader   *manager.Uploader
+	downloader *manager.Downloader
 
 	bucket string
 }
 
 var _ storage.Storage = (*Storage)(nil)
 
-func NewStorage(logger *log.Logger, svc s3iface.S3API, s3Bucket string) *Storage {
+func NewStorage(logger *log.Logger, client *s3.Client, s3Bucket string) *Storage {
 	return &Storage{
 		logger:     logger,
-		svc:        svc,
-		uploader:   s3manager.NewUploaderWithClient(svc),
-		downloader: s3manager.NewDownloaderWithClient(svc),
+		client:     client,
+		uploader:   manager.NewUploader(client),
+		downloader: manager.NewDownloader(client),
 
 		bucket: s3Bucket,
 	}
@@ -70,18 +68,19 @@ func (st *Storage) WriteProfile(ctx context.Context, params *storage.WriteProfil
 
 	key := createProfileKey(params.Service, params.Type, createdAt, params.Labels)
 
-	resp, err := st.uploader.UploadWithContext(ctx, &s3manager.UploadInput{
+	resp, err := st.uploader.Upload(ctx, &s3.PutObjectInput{
 		Bucket: aws.String(st.bucket),
 		Key:    aws.String(key),
-		Metadata: map[string]*string{
-			"service":    aws.String(params.Service),
-			"type":       aws.String(params.Type.String()),
-			"labels":     aws.String(params.Labels.String()),
-			"created_at": aws.String(createdAt.Format(time.RFC3339)),
+		Metadata: map[string]string{
+			"service":    params.Service,
+			"type":       params.Type.String(),
+			"labels":     params.Labels.String(),
+			"created_at": createdAt.Format(time.RFC3339),
 		},
 		Body: r,
 	})
 	if err != nil {
+		st.logger.Debugw("writeProfile: s3 upload error", "key", key, "error", err)
 		return profile.Meta{}, err
 	}
 
@@ -157,7 +156,7 @@ func (pl *profileList) Profile() (io.Reader, error) {
 		panic("s3 profileList: profile out of range")
 	}
 
-	w := aws.NewWriteAtBuffer(pl.buf[:0])
+	w := manager.NewWriteAtBuffer(pl.buf[:0])
 	err := pl.getter(pl.ctx, w, pl.key)
 	if err != nil {
 		pl.setErr(err)
@@ -193,28 +192,25 @@ func (st *Storage) ListServices(ctx context.Context) ([]string, error) {
 	}
 
 	var services []string
-	err := st.svc.ListObjectsV2PagesWithContext(ctx, input, func(page *s3.ListObjectsV2Output, _ bool) bool {
-		if len(page.CommonPrefixes) == 0 {
-			return false
+
+	paginator := s3.NewListObjectsV2Paginator(st.client, input)
+	for paginator.HasMorePages() {
+		page, err := paginator.NextPage(context.TODO())
+		if err != nil {
+			return nil, err
 		}
-
-		prefix := aws.StringValue(page.Prefix)
-
+		prefix := aws.ToString(page.Prefix)
 		st.logger.Debugw("listServices: s3 list objects", "prefix", prefix, "common prefixes", page.CommonPrefixes)
 
 		for _, cp := range page.CommonPrefixes {
-			s := aws.StringValue(cp.Prefix)
+			s := aws.ToString(cp.Prefix)
 			if s != "" {
 				s = strings.TrimPrefix(s, prefix)
 				services = append(services, strings.TrimSuffix(s, "/"))
 			}
 		}
-
-		return *page.IsTruncated
-	})
-	if err != nil {
-		return nil, err
 	}
+
 	if len(services) == 0 {
 		return nil, storage.ErrNotFound
 	}
@@ -270,15 +266,21 @@ func (st *Storage) findProfiles(ctx context.Context, params *storage.FindProfile
 	input := &s3.ListObjectsV2Input{
 		Bucket:  &st.bucket,
 		Prefix:  aws.String(prefix),
-		MaxKeys: aws.Int64(int64(limit)),
+		MaxKeys: int32(limit),
 	}
 
 	st.logger.Debugw("findProfiles: s3 list objects pages", "input", input)
 
 	var metas []profile.Meta
-	err := st.svc.ListObjectsV2PagesWithContext(ctx, input, func(page *s3.ListObjectsV2Output, _ bool) bool {
+	paginator := s3.NewListObjectsV2Paginator(st.client, input)
+	for paginator.HasMorePages() {
+		page, err := paginator.NextPage(context.TODO())
+		if err != nil {
+			// TODO(narqo) parse NoCredentialProviders and similar to return meaningful errors to the user
+			return nil, err
+		}
 		for _, object := range page.Contents {
-			key := aws.StringValue(object.Key)
+			key := aws.ToString(object.Key)
 			if key == "" {
 				st.logger.Debugw("findProfiles: s3 list objects, empty object key", "object", object)
 				continue
@@ -295,7 +297,7 @@ func (st *Storage) findProfiles(ctx context.Context, params *storage.FindProfile
 			}
 
 			if meta.CreatedAt.After(createdAtMax) {
-				return false
+				break
 			}
 
 			if !meta.Labels.Include(params.Labels) {
@@ -308,18 +310,8 @@ func (st *Storage) findProfiles(ctx context.Context, params *storage.FindProfile
 
 		if len(metas) >= limit {
 			metas = metas[:limit]
-			return false
+			break
 		}
-
-		if page.IsTruncated == nil {
-			return false
-		}
-		return *page.IsTruncated
-	})
-
-	// TODO(narqo) parse NoCredentialProviders and similar to return meaningful errors to the user
-	if err != nil {
-		return nil, err
 	}
 
 	if len(metas) == 0 {
@@ -336,7 +328,7 @@ func (st *Storage) getObject(ctx context.Context, w io.WriterAt, key string) err
 		Bucket: aws.String(st.bucket),
 		Key:    aws.String(key),
 	}
-	n, err := st.downloader.DownloadWithContext(ctx, w, input)
+	n, err := st.downloader.Download(ctx, w, input)
 	if err != nil {
 		return err
 	}

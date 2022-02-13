@@ -1,8 +1,8 @@
 package pprofutil
 
 import (
-	pprofProfile "github.com/profefe/profefe/internal/pprof/profile"
-	"github.com/profefe/profefe/pkg/profile"
+	pprofProfile "github.com/00security/profefe/internal/pprof/profile"
+	"github.com/00security/profefe/pkg/profile"
 )
 
 type ProfileBuilder struct {

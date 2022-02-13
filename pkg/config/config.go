@@ -6,12 +6,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/profefe/profefe/pkg/agentutil"
-	"github.com/profefe/profefe/pkg/log"
-	storageBadger "github.com/profefe/profefe/pkg/storage/badger"
-	storageCH "github.com/profefe/profefe/pkg/storage/clickhouse"
-	storageGCS "github.com/profefe/profefe/pkg/storage/gcs"
-	storageS3 "github.com/profefe/profefe/pkg/storage/s3"
+	"github.com/00security/profefe/pkg/agentutil"
+	"github.com/00security/profefe/pkg/log"
+	storageBadger "github.com/00security/profefe/pkg/storage/badger"
+	storageCH "github.com/00security/profefe/pkg/storage/clickhouse"
+	storageGCS "github.com/00security/profefe/pkg/storage/gcs"
+	storageS3 "github.com/00security/profefe/pkg/storage/s3"
 )
 
 const (

@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "version",
+    srcs = ["version.go"],
+    importpath = "github.com/00security/profefe/version",
+    visibility = ["//visibility:public"],
+    x_defs = {
+        "github.com/00security/profefe/version.CodeVersion": "{VERSION}",
+        "github.com/00security/profefe/version.BuildVersion": "{STABLE_BUILD_VERSION}",
+        "github.com/00security/profefe/version.CodeCommit": "{GITSHA}",
+        "github.com/00security/profefe/version.BuildTime": "{BUILDTIME}",
+    },
+)

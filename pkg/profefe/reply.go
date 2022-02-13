@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/profefe/profefe/pkg/log"
+	"github.com/00security/profefe/pkg/log"
 	"go.uber.org/zap"
 )
 

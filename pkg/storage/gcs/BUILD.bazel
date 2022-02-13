@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "gcs",
+    srcs = [
+        "gcs.go",
+        "storage.go",
+    ],
+    importpath = "github.com/00security/profefe/pkg/storage/gcs",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//pkg/log",
+        "//pkg/profile",
+        "//pkg/storage",
+        "@com_github_rs_xid//:xid",
+        "@com_google_cloud_go_storage//:storage",
+        "@org_golang_google_api//iterator",
+        "@org_uber_go_zap//:zap",
+    ],
+)
+
+go_test(
+    name = "gcs_test",
+    srcs = ["storage_integration_test.go"],
+    deps = [
+        "//pkg/log",
+        "//pkg/storage/gcs",
+        "//pkg/storage/storagetest",
+        "@com_github_stretchr_testify//require",
+        "@com_github_stretchr_testify//suite",
+        "@com_google_cloud_go_storage//:storage",
+        "@org_golang_google_api//option",
+        "@org_uber_go_zap//zapcore",
+        "@org_uber_go_zap//zaptest",
+    ],
+)

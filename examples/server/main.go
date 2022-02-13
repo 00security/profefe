@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/profefe/profefe/agent"
+	"github.com/00security/profefe/agent"
 )
 
 const pffCollectorAddr = "http://localhost:10100"

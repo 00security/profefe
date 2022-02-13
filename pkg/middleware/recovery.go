@@ -3,7 +3,7 @@ package middleware
 import (
 	"net/http"
 
-	"github.com/profefe/profefe/pkg/log"
+	"github.com/00security/profefe/pkg/log"
 )
 
 func RecoveryHandler(logger *log.Logger, handler http.Handler) http.Handler {

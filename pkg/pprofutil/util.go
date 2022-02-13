@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"strings"
 
-	pprofProfile "github.com/profefe/profefe/internal/pprof/profile"
+	pprofProfile "github.com/00security/profefe/internal/pprof/profile"
 )
 
 // SampleAddLabel adds a key-value pair to the sample.

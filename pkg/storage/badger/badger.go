@@ -6,8 +6,8 @@ import (
 	"io"
 	"time"
 
+	"github.com/00security/profefe/pkg/log"
 	"github.com/dgraph-io/badger"
-	"github.com/profefe/profefe/pkg/log"
 	"go.uber.org/zap"
 )
 

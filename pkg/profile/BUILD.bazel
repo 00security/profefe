@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "profile",
+    srcs = [
+        "labels.go",
+        "profile.go",
+        "profile_type.go",
+    ],
+    importpath = "github.com/00security/profefe/pkg/profile",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "profile_test",
+    srcs = [
+        "labels_test.go",
+        "profile_test.go",
+        "profile_type_test.go",
+    ],
+    embed = [":profile"],
+    deps = [
+        "@com_github_stretchr_testify//assert",
+        "@com_github_stretchr_testify//require",
+    ],
+)

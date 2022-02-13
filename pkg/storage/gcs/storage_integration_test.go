@@ -10,9 +10,9 @@ import (
 	"time"
 
 	gcs "cloud.google.com/go/storage"
-	"github.com/profefe/profefe/pkg/log"
-	storageGCS "github.com/profefe/profefe/pkg/storage/gcs"
-	"github.com/profefe/profefe/pkg/storage/storagetest"
+	"github.com/00security/profefe/pkg/log"
+	storageGCS "github.com/00security/profefe/pkg/storage/gcs"
+	"github.com/00security/profefe/pkg/storage/storagetest"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 	"go.uber.org/zap/zapcore"
