@@ -21,11 +21,11 @@ steps:
   displayName: "Show bazel version"
 
 - bash: |
-    bazel build --platforms=//platforms:m1_release --stamp --workspace_status_command=./scripts/git/status.sh  //cmd/profefe:image-arm64.tar
+    bazel build --cpu=darwin_arm64 --platforms=//platforms:m1_release --stamp --workspace_status_command=./scripts/git/status.sh  //cmd/profefe:image-arm64.tar
   displayName: "Build arm64 image"
 
 - bash: |
-    bazel build --platforms=//platforms:x64_release --stamp --workspace_status_command=./scripts/git/status.sh  //cmd/profefe:image-arm64.tar
+    bazel build --platforms=//platforms:x64_release --stamp --workspace_status_command=./scripts/git/status.sh  //cmd/profefe:image-amd64.tar
   displayName: "Build amd64 image"
 
 - task: Docker@2
