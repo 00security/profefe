@@ -9,8 +9,16 @@ import (
 	pprofProfile "github.com/00security/profefe/internal/pprof/profile"
 )
 
+type ProfileParserErrorCode string
+
+const (
+	ProfileParserErrorUndefined    ProfileParserErrorCode = "undefined"
+	ProfileParserErrorProfileEmpty ProfileParserErrorCode = "profile_empty"
+)
+
 type ProfileParserError struct {
-	err error
+	err  error
+	code ProfileParserErrorCode
 }
 
 func (e *ProfileParserError) Unwrap() error {
@@ -19,6 +27,10 @@ func (e *ProfileParserError) Unwrap() error {
 
 func (e *ProfileParserError) Error() string {
 	return e.err.Error()
+}
+
+func (e *ProfileParserError) Code() ProfileParserErrorCode {
+	return e.code
 }
 
 type ProfileParser struct {
@@ -47,10 +59,10 @@ func (pr *ProfileParser) ParseProfile() (prof *pprofProfile.Profile, err error) 
 		pr.prof, err = pprofProfile.Parse(pr.r)
 	}
 	if err != nil {
-		return nil, &ProfileParserError{err}
+		return nil, &ProfileParserError{err, ProfileParserErrorUndefined}
 	}
 	if len(pr.prof.Sample) == 0 {
-		return nil, &ProfileParserError{fmt.Errorf("profile is empty: no samples")}
+		return nil, &ProfileParserError{fmt.Errorf("profile is empty: no samples"), ProfileParserErrorProfileEmpty}
 	}
 	return pr.prof, nil
 }

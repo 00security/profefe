@@ -1,0 +1,45 @@
+trigger:
+  branches:
+    exclude:
+    - '*'
+  tags:
+    include:
+    - '*'
+
+pool:
+  vmImage: 'ubuntu-latest'
+steps:
+
+- script: |
+    set -ex
+    wget https://github.com/google/go-containerregistry/releases/download/v0.8.0/go-containerregistry_Linux_x86_64.tar.gz -o go-containerregistry_Linux_arm64.tar.gz
+    tar -xvzf go-containerregistry_Linux_x86_64.tar.gz
+  displayName: "Install dependencies"
+
+- script: |
+    bazel version
+  displayName: "Show bazel version"
+
+- bash: |
+    bazel build --platforms=//platforms:m1_release --stamp --workspace_status_command=./scripts/git/status.sh  //cmd/profefe:image-arm64.tar
+  displayName: "Build arm64 image"
+
+- bash: |
+    bazel build --platforms=//platforms:x64_release --stamp --workspace_status_command=./scripts/git/status.sh  //cmd/profefe:image-arm64.tar
+  displayName: "Build amd64 image"
+
+- task: Docker@2
+  displayName: Login
+  inputs:
+    containerRegistry: 'docker-hub-zer0b0t'
+    command: 'login'
+
+- bash: |
+      set -ex
+      VERSION=$(git describe --exact-match --tags $(Build.SourceVersion))
+      ./crane push $(System.DefaultWorkingDirectory)/bazel-bin/cmd/profefe/image-arm64.tar 00security/profefe:${VERSION}-arm64
+      ./crane push $(System.DefaultWorkingDirectory)/bazel-bin/cmd/profefe/image-amd64.tar 00security/profefe:${VERSION}-amd64
+      docker manifest create 00security/profefe:${VERSION} 00security/profefe:${VERSION}-arm64 00security/profefe:${VERSION}-amd64
+      docker tag 00security/profefe:${VERSION} 00security/profefe:latest
+      docker manifest push --purge 00security/profefe:latest
+  displayName: "Push images"

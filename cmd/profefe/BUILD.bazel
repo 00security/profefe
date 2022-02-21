@@ -6,15 +6,21 @@ container_image(
     base = "//:golang",
     entrypoint = ["/profefe"],
     files = [":profefe"],
+    target_compatible_with = select({
+        "//:m1_build": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
 )
 
-container_push(
-   name = "push",
-   image = ":image",
-   format = "Docker",
-   registry = "gcr.io",
-   repository = "my-project/my-image",
-   tag = "dev",
+container_image(
+    name = "image-amd64",
+    base = "//:golang",
+    entrypoint = ["/profefe"],
+    files = [":profefe"],
+    target_compatible_with = select({
+        "//:x86_64_build": [],
+        "//conditions:default": ["@platforms//:incompatible"],
+    }),
 )
 
 go_library(
