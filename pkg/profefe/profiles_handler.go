@@ -62,9 +62,13 @@ func (h *ProfilesHandler) HandleCreateProfile(w http.ResponseWriter, r *http.Req
 	if err != nil {
 		var perr *pprofutil.ProfileParserError
 		if errors.As(err, &perr) {
-			return StatusError(http.StatusBadRequest, fmt.Sprintf("malformed profile (%s)", err), perr)
+			if perr.Code() != pprofutil.ProfileParserErrorProfileEmpty {
+				// if the error is not empty profile, return error
+				return StatusError(http.StatusBadRequest, fmt.Sprintf("malformed profile (%s)", err), perr)
+			}
+		} else {
+			return StatusError(http.StatusInternalServerError, "failed to collect profile", err)
 		}
-		return StatusError(http.StatusInternalServerError, "failed to collect profile", err)
 	}
 
 	ReplyJSON(w, profModel)
