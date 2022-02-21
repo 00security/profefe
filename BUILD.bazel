@@ -56,18 +56,3 @@ selects.config_setting_group(
     ],
     visibility = ["//:__subpackages__"],
 )
-
-container_image(
-    name = "golang",
-    base = select({
-        ":m1_build": "@golang_distroless_arm64//image",
-        ":x86_64_build": "@golang_distroless_amd64//image",
-        "//conditions:default": "@platforms//:incompatible",
-    }),
-    target_compatible_with = select({
-        ":m1_build": [],
-        ":x86_64_build": [],
-        "//conditions:default": ["@platforms//:incompatible"],
-    }),
-    visibility = ["//:__subpackages__"],
-)

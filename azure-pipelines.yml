@@ -9,6 +9,10 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 steps:
+- script: |
+    echo "##vso[build.updatebuildnumber]$(Build.SourceBranchName)$(Build.BuildId)"
+    export STABLE_BUILD_VERSION=$(Build.SourceBranchName)-$(Build.BuildId)
+  displayName: '[updatebuildnumber] to $(Build.SourceBranchName)$(Build.BuildId)'
 
 - script: |
     set -ex
@@ -22,10 +26,12 @@ steps:
 
 - bash: |
     bazel build --cpu=darwin_arm64 --platforms=//platforms:m1_release --stamp --workspace_status_command=./scripts/git/status.sh  //cmd/profefe:image-arm64.tar
+    mv bazel-bin/cmd/profefe/image-arm64.tar . 
   displayName: "Build arm64 image"
 
 - bash: |
     bazel build --platforms=//platforms:x64_release --stamp --workspace_status_command=./scripts/git/status.sh  //cmd/profefe:image-amd64.tar
+    mv bazel-bin/cmd/profefe/image-amd64.tar .
   displayName: "Build amd64 image"
 
 - task: Docker@2
@@ -37,9 +43,16 @@ steps:
 - bash: |
       set -ex
       VERSION=$(git describe --exact-match --tags $(Build.SourceVersion))
-      ./crane push $(System.DefaultWorkingDirectory)/bazel-bin/cmd/profefe/image-arm64.tar 00security/profefe:${VERSION}-arm64
-      ./crane push $(System.DefaultWorkingDirectory)/bazel-bin/cmd/profefe/image-amd64.tar 00security/profefe:${VERSION}-amd64
-      docker manifest create 00security/profefe:${VERSION} 00security/profefe:${VERSION}-arm64 00security/profefe:${VERSION}-amd64
-      docker tag 00security/profefe:${VERSION} 00security/profefe:latest
+      ./crane auth login -u $(REGISTRY_USER) -p $(REGISTRY_PASSWORD) index.docker.io
+      ./crane push $(System.DefaultWorkingDirectory)/image-arm64.tar 00security/profefe:${VERSION}-arm64
+      ./crane push $(System.DefaultWorkingDirectory)/image-amd64.tar 00security/profefe:${VERSION}-amd64
+      docker manifest create 00security/profefe:${VERSION} 00security/profefe:${VERSION}-amd64 00security/profefe:${VERSION}-arm64
+      docker manifest annotate 00security/profefe:${VERSION} 00security/profefe:${VERSION}-arm64 --os linux --arch arm64
+      docker manifest push --purge 00security/profefe:${VERSION}
+      ./crane tag 00security/profefe:${VERSION}-arm64 latest-arm64
+      ./crane tag 00security/profefe:${VERSION}-amd64 latest-amd64
+      docker manifest create 00security/profefe:latest 00security/profefe:latest-amd64 00security/profefe:latest-arm64
+      docker manifest annotate 00security/profefe:latest 00security/profefe:latest-arm64 --os linux --arch arm64
       docker manifest push --purge 00security/profefe:latest
   displayName: "Push images"
+
